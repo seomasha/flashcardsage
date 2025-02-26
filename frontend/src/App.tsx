@@ -20,10 +20,10 @@ function App() {
     getAllDecks();
   }, []);
 
-  const handleCreateDeck = (e: React.FormEvent) => {
+  const handleCreateDeck = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      fetch("http://localhost:3000/decks", {
+      const response = await fetch("http://localhost:3000/decks", {
         method: "POST",
         body: JSON.stringify({
           title,
@@ -32,6 +32,19 @@ function App() {
           "Content-Type": "application/json",
         },
       });
+      const deck = await response.json();
+      setDecks([...decks, deck]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteDeck = async (id: string) => {
+    try {
+      await fetch(`http://localhost:3000/decks/${id}`, {
+        method: "DELETE",
+      });
+      setDecks(decks.filter((deck) => deck._id !== id));
     } catch (error) {
       console.log(error);
     }
@@ -53,7 +66,17 @@ function App() {
 
       <ul>
         {decks.map((deck) => (
-          <li key={deck._id}>{deck.title}</li>
+          <>
+            <li key={deck._id}>{deck.title}</li>
+            <button
+              style={{
+                color: "red",
+              }}
+              onClick={() => deleteDeck(deck._id)}
+            >
+              Delete
+            </button>
+          </>
         ))}
       </ul>
     </div>

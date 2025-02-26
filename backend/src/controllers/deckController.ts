@@ -19,3 +19,13 @@ export const getAllDecks = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to get decks." });
   }
 };
+
+export const deleteDeckById = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const deck = await Deck.findByIdAndDelete(id);
+    res.status(201).json(deck);
+  } catch (e) {
+    res.status(500).json({ error: "Failed to delete deck." });
+  }
+};
