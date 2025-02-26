@@ -10,3 +10,12 @@ export const createDeck = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to create deck" });
   }
 };
+
+export const getAllDecks = async (req: Request, res: Response) => {
+  try {
+    const decks = await Deck.find();
+    res.status(200).json(decks);
+  } catch (e) {
+    res.status(500).json({ error: "Failed to get decks." });
+  }
+};
